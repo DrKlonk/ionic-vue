@@ -1,13 +1,14 @@
 <template>
-  <ion-img src="" alt=""/>
-  <h2></h2>
-  <p></p>
+  <ion-img :src="image" :alt="description"/>
+  <h2 class="ion-text-center">{{ title }}</h2>
+  <p class="ion-text-center">{{ description }}</p>
 </template>
 
 <script>
-import { IonImg }
+import { IonImg } from '@ionic/vue'
 export default {
- components: {
+    props: ['title', 'image', 'description'],
+    components: {
      IonImg
  }
 }
