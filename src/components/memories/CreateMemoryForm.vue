@@ -6,8 +6,13 @@
             <ion-input type="text" required v-model="enteredTitle"/>
         </ion-item>
         <ion-item>
-            <ion-label position="floating">Image URL</ion-label>
-            <ion-input type="url" required v-model="enteredImageURL"/>
+            <ion-thumbnail slot="start">
+                <img :src="takenImageURL" alt="Preview of the image"/>
+            </ion-thumbnail>
+            <ion-button type="button" fill="clear" @click="takePhoto">
+                <ion-icon slot="start" :icon="camera"/>
+                Take Photo
+            </ion-button>
         </ion-item>
         <ion-item>
             <ion-label position="floating">Description</ion-label>
@@ -19,32 +24,48 @@
 </template>
 
 <script>
-import { IonButton, IonItem, IonInput, IonLabel, IonList, IonTextarea} from '@ionic/vue'
+import { IonButton, IonIcon, IonItem, IonInput, IonLabel, IonList, IonTextarea, IonThumbnail} from '@ionic/vue'
+import { camera } from 'ionicons/icons'
+import { CameraResultType, CameraSource, Plugins } from '@capacitor/core'
+
+const { Camera } = Plugins;
+
 export default {
     emits: ['save-memory'],    
     components: {
         IonButton,
+        IonIcon,
         IonInput,
         IonItem,
         IonLabel,
         IonList,
         IonTextarea,
+        IonThumbnail,
     },
     data() {
         return {
+            camera,
             enteredTitle: '',
-            enteredImageURL: '',
             enteredDescription: '',
+            takenImageURL: null,
         }
     },
     methods: {
-        submitForm () {
+        submitForm() {
             const memoryData = {
                 title: this.enteredTitle,
-                image: this.enteredImageURL,
+                image: this.takenImageURL,
                 description: this.enteredDescription,
             }
             this.$emit('save-memory', memoryData)
+        },
+        async takePhoto() {
+            const photo = await Camera.getPhoto({
+                resultType: CameraResultType.Uri,
+                source: CameraSource.Camera,
+                quality: 60,
+            })
+            this.takenImageURL = photo.webPath
         }
     }
 }
