@@ -1,31 +1,18 @@
 <template>
   <base-layout page-title="Add a memory" page-default-back-link='/memories'>
-    <ion-list>
-        <ion-item>
-            <ion-label position="floating">Title</ion-label>
-            <ion-input type="text" required />
-        </ion-item>
-        <ion-item>
-            <ion-label position="floating">Image URL</ion-label>
-            <ion-input type="url" required />
-        </ion-item>
-        <ion-item>
-            <ion-label position="floating">Description</ion-label>
-            <ion-textarea rows="5"></ion-textarea>
-        </ion-item>
-    </ion-list>
+    <create-memory-form @save-memory="saveMemory"/>
   </base-layout>
 </template>
 
 <script>
-import { IonItem, IonInput, IonLabel, IonList, IonTextarea} from '@ionic/vue'
+import CreateMemoryForm from '../components/memories/CreateMemoryForm.vue'
 export default {
-    components: {
-        IonInput,
-        IonItem,
-        IonLabel,
-        IonList,
-        IonTextarea,
+  components: { CreateMemoryForm },
+    methods: {
+        saveMemory(memoryData) {
+            this.$store.dispatch('addMemory', memoryData)
+            this.$router.replace('/memories') // replace instead of "push" to disable going back
+        }
     }
 }
 </script>
